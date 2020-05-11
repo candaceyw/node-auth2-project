@@ -6,10 +6,16 @@ const cookieParser = require('cookie-parser');
 const authRouter = require('./auth/auth-router');
 const usersRouter = require('./users/users-router');
 
+const server = express();
+const port = process.env.PORT || 5000;
+
 server.use(cors());
 server.use(helmet());
 server.use(express.json());
 server.use(cookieParser());
+
+server.use('/auth', authRouter);
+server.use('/users', usersRouter);
 
 server.get('/', (req, res, next) => {
 	res.json({
