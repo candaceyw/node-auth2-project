@@ -4,12 +4,16 @@ const restrict = require('../middleware/restrict');
 
 const router = express.Router();
 
-router.get('/', restrict(), async (req, res, next) => {
-	try {
-		res.json(await Users.find());
-	} catch (err) {
-		next(err);
+router.get(
+	'/',
+	restrict('tech', 'sales', 'customer-service'),
+	async (req, res, next) => {
+		try {
+			res.json(await Users.find());
+		} catch (err) {
+			next(err);
+		}
 	}
-});
+);
 
 module.exports = router;

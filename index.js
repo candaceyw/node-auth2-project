@@ -1,6 +1,7 @@
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
+const session = require('express-session');
 
 const cookieParser = require('cookie-parser');
 const authRouter = require('./auth/auth-router');
@@ -13,6 +14,19 @@ server.use(cors());
 server.use(helmet());
 server.use(express.json());
 server.use(cookieParser());
+
+server.use(
+	session({
+		secret: 'secret token',
+		resave: false,
+		saveUninitialized: true,
+		unset: 'destroy',
+		name: 'session cookie name',
+		genid: (req) => {
+			// Returns a random string to be used as a session ID
+		},
+	})
+);
 
 server.use('/auth', authRouter);
 server.use('/users', usersRouter);

@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Users = require('../users/users-model');
 const restrict = require('../middleware/restrict');
-
+const session = require('express-session');
 const router = express.Router();
 
 router.post('/register', async (req, res, next) => {
@@ -50,14 +50,15 @@ router.post('/login', async (req, res, next) => {
 		// req.session.user = user;
 		const tokenPayload = {
 			userId: user.id,
-			userRole: 'tech' || 'customer-service' || 'sales',
+			// userRole: ('tech', 'sales'),
+			userRole: user.department,
 		};
 
 		const token = jwt.sign(tokenPayload, process.env.JWT_SECRET);
 		res.cookie('token', token);
 
 		res.json({
-			message: `Welcome ${user.username}!`,
+			message: `Welcome, ${user.username}!`,
 			token: token,
 		});
 	} catch (err) {
@@ -65,19 +66,13 @@ router.post('/login', async (req, res, next) => {
 	}
 });
 
-router.get('/logout', restrict(), (req, res, next) => {
-	// this will delete the session in the database and try to expire the cookie,
-	// though it's ultimately up to the client if they delete the cookie or not.
-	// but it becomes useless to them once the session is deleted server-side.
-	req.session.destroy((err) => {
-		if (err) {
-			next(err);
-		} else {
-			res.json({
-				message: 'Logged out',
-			});
-		}
-	});
+router.get('/logout', (req, res) => {
+	if (req.session.user) {
+		delete req.session.user;
+		res.redirect('/auth/login');
+	} else {
+		res.redirect('/');
+	}
 });
 
 module.exports = router;
