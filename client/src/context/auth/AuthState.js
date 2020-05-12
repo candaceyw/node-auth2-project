@@ -20,14 +20,14 @@ const AuthState = (props) => {
 		token: localStorage.getItem('token'),
 		isAuthenticated: null,
 		loading: true,
-		user: null,
+		user: [],
 		error: null,
 	};
 
 	const [state, dispatch] = useReducer(authReducer, initialState);
 
 	// Load User
-	const loadUser = async (formData) => {
+	const loadUser = async () => {
 		setAuthToken(localStorage.token);
 
 		const config = {
@@ -38,12 +38,8 @@ const AuthState = (props) => {
 		};
 
 		try {
-			const res = await axios.get(
-				`http://localhost:5000/users`,
-				// formData,
-				config
-			);
-			console.log('testing', res);
+			const res = await axios.get(`http://localhost:5000/users`, config);
+			console.log('loadUser from AuthState', res);
 
 			dispatch({
 				type: USER_LOADED,
