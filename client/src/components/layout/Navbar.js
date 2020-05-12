@@ -2,14 +2,11 @@ import React, { Fragment, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import AuthContext from '../../context/auth/authContext';
-// import ContactContext from '../../context/contact/contactContext';
 
 const Navbar = ({ title, icon }) => {
 	const authContext = useContext(AuthContext);
-	// const contactContext = useContext(ContactContext);
 
-	const { isAuthenticated, logout, user, loadUser } = authContext;
-	// const { clearContacts } = contactContext;
+	const { isAuthenticated, logout, user, loadUser, clearUsers } = authContext;
 
 	useEffect(() => {
 		loadUser();
@@ -18,12 +15,12 @@ const Navbar = ({ title, icon }) => {
 
 	const onLogout = () => {
 		logout();
-		// clearContacts();
+		clearUsers();
 	};
 
 	const authLinks = (
 		<Fragment>
-			<li>Hello {user && user.name}</li>
+			<li>Hello {user && user.username}</li>
 			<li>
 				<a onClick={onLogout} href='#!'>
 					<i className='fas fa-sign-out-alt' />{' '}

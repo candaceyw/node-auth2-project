@@ -7,6 +7,7 @@ import {
 	LOGIN_FAIL,
 	LOGOUT,
 	CLEAR_ERRORS,
+	CLEAR_USERS,
 } from '../types';
 
 export default (state, action) => {
@@ -38,8 +39,16 @@ export default (state, action) => {
 				...state,
 				isAuthenticated: false,
 				loading: false,
-				user: null,
+				user: [],
 				error: action.payload,
+			};
+		case CLEAR_USERS:
+			return {
+				token: null,
+				isAuthenticated: false,
+				loading: true,
+				user: [],
+				error: null,
 			};
 		case CLEAR_ERRORS:
 			return {
